@@ -3,18 +3,16 @@ import datetime
 import uuid
 
 class BaseModel:
-    id = str(uuid.uuid4())
+    
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
     
     def __init__(self):
-        self.id = BaseModel.id
-        self.created_at = BaseModel.created_at
-        self.updated_at = BaseModel.created_at
+        self.id = str(uuid.uuid4())
     
     def __str__(self):
-        return "f{type(self).__name__} ({<self.id>}) {self.__dict__}"
-
+        return f"{type(self).__name__} ({self.id}) {self.__dict__}"
+    
     def save(self):
         self.updated_at = datetime.datetime.now()
     

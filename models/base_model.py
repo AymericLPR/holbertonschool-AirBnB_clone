@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" Comments the module """
 import datetime
 import uuid
 

@@ -8,10 +8,22 @@ class BaseModel:
     created_at = datetime.datetime.now()
     updated_at = datetime.datetime.now()
     
-    def __init__(self):
-        """ coments """
-        self.id = str(uuid.uuid4())
-    
+   class BaseModel:
+    """Base class for all models"""
+
+    def __init__(self, *args, **kwargs):
+        """Initialize a new instance of BaseModel"""
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    value = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                if key != '__class__':
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.datetime.now()
+            self.updated_at = self.created_at
+ 
     def __str__(self):
         """ comments """
         return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"

@@ -1,38 +1,38 @@
 #!/usr/bin/python3
 """ Module file_storage for the AirBnB console """
 import json
-
+from models.base_model import BaseModel
 
 class FileStorage:
-    """ class that store information of the BaseModel Class """
+    """Serializes instances to a JSON file and deserializes JSON file to instances"""
 
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """ method that returns all objects """
-        return self.__objects
+        """Returns the dictionary __objects"""
+        return FileStorage.__objects
 
     def new(self, obj):
-        """ method that adds a new object """
-        key = obj.__class__.__name__ + "." + str(obj.id)
-        self.__objects[key] = obj
+        """Sets in __objects the obj with key <obj class name>.id"""
+        key = obj.__class__.__name__ + "." + obj.id
+        FileStorage.__objects[key] = obj
 
     def save(self):
-        """ method that saves a new object """
-        with open(FileStorage.__file_path, "w", encoding="utf-8") as fp:
-            d = {i: j.to_dict() for i,
-                 j in self.__objects.items()}
-            json.dump(d, fp)
+        """Serializes __objects to the JSON file"""
+        with open(FileStorage.__file_path, "w") as file:
+            d = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
+            json.dump(d, file)
 
     def reload(self):
-        """ method that loads the objectos from de file """
-        from models.base_model import BaseModel
+        """Deserializes the JSON file to __objects"""
         try:
-            with open(FileStorage.__file_path) as fp:
-                data = json.load(fp)
-                for i, j in data.items():
-                    if "BaseModel" in i:
-                        self.__objects[i] = BaseModel(**j)
-        except Exception:
+            with open(FileStorage.__file_path, "r") as file:
+                d = json.load(file)
+                for key, value in d.items():
+                    cls_name, obj_id = key.split(".")
+                    cls = __import__("models." + cls_name, fromlist=[cls_name])
+                    obj = cls.__dict__[cls_name](**value)
+                    FileStorage.__objects[key] = obj
+        except FileNotFoundError:
             pass

@@ -1,14 +1,39 @@
 #!/usr/bin/python3
+import unittest
+import datetime
+from unittest.mock import patch
 from models.base_model import BaseModel
 
-my_model = BaseModel()
-my_model.name = "My First Model"
-my_model.my_number = 89
-print(my_model)
-my_model.save()
-print(my_model)
-my_model_json = my_model.to_dict()
-print(my_model_json)
-print("JSON of my_model:")
-for key in my_model_json.keys():
-    print("\t{}: ({}) - {}".format(key, type(my_model_json[key]), my_model_json[key]))
+class TestBaseModel(unittest.TestCase):
+    def test_attributes(self):
+        model = BaseModel()
+        self.assertIsInstance(model.id, str)
+        self.assertIsInstance(model.created_at, datetime.datetime)
+        self.assertIsInstance(model.updated_at, datetime.datetime)
+
+    def test_str(self):
+        model = BaseModel()
+        model_dict = model.__dict__.copy()
+        model_dict.pop('created_at', None)
+        model_dict.pop('updated_at', None)
+        expected_str = "[BaseModel] ({}) {}".format(model.id, model_dict)
+        self.assertEqual(str(model), expected_str)
+
+    def test_save(self):
+        model = BaseModel()
+        original_updated_at = model.updated_at
+        with patch('models.base_model.datetime') as mock_date:
+            model.save()
+            self.assertNotEqual(original_updated_at, model.updated_at)
+            self.assertEqual(mock_date.now.call_count, 1)
+
+    def test_to_dict(self):
+        model = BaseModel()
+        model_dict = model.to_dict()
+        self.assertIsInstance(model_dict['created_at'], str)
+        self.assertIsInstance(model_dict['updated_at'], str)
+        self.assertEqual(model_dict['__class__'], 'BaseModel')
+        self.assertDictEqual(model_dict, {'id': model.id,
+                                          'created_at': model.created_at.isoformat(),
+                                          'updated_at': model.updated_at.isoformat(),
+                                          '__class__': 'BaseModel'})

@@ -3,10 +3,11 @@
 import models
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 import cmd
 import re
 classes = {"BaseModel": BaseModel,
-           }
+           "User": User}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -113,16 +114,6 @@ class HBNBCommand(cmd.Cmd):
                     obj = BaseModel()
                 elif s == "User":
                     obj = User()
-                elif s == "State":
-                    obj = State()
-                elif s == "City":
-                    obj = City()
-                elif s == "Amenity":
-                    obj = Amenity()
-                elif s == "Place":
-                    obj = Place()
-                else:
-                    obj = Review()
                 obj.save()
                 print(obj.id)
 

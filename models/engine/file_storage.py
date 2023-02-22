@@ -28,11 +28,14 @@ class FileStorage:
     def reload(self):
         """ method that loads the objectos from de file """
         from models.base_model import BaseModel
+        from models.user import User
         try:
             with open(FileStorage.__file_path) as fp:
                 data = json.load(fp)
                 for i, j in data.items():
                     if "BaseModel" in i:
                         self.__objects[i] = BaseModel(**j)
+                    elif "User" in i:
+                        self.__objects[i] = User(**j)
         except Exception:
             pass

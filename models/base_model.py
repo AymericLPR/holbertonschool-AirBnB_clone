@@ -2,7 +2,7 @@
 """ Comments the module """
 import datetime
 import uuid
-from models.engine import storage
+from models.engine.file_storage import FileStorage
 
 class BaseModel:
     """Defines all common attributes/methods for other classes"""

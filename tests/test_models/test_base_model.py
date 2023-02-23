@@ -37,4 +37,3 @@ class TestBaseModel(unittest.TestCase):
                                           'created_at': model.created_at.isoformat(),
                                           'updated_at': model.updated_at.isoformat(),
                                           '__class__': 'BaseModel'})
-

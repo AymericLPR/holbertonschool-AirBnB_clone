@@ -4,10 +4,20 @@ import models
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import cmd
 import re
 classes = {"BaseModel": BaseModel,
-           "User": User}
+           "User": User,
+           "State": State,
+           "City": City,
+           "Amenity": Amenity,
+           "Place": Place,
+           "Review": Review}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -114,6 +124,16 @@ class HBNBCommand(cmd.Cmd):
                     obj = BaseModel()
                 elif s == "User":
                     obj = User()
+                elif s == "State":
+                    obj = State()
+                elif s == "City":
+                    obj = City()
+                elif s == "Amenity":
+                    obj = Amenity()
+                elif s == "Place":
+                    obj = Place()
+                else:
+                    obj = Review()
                 obj.save()
                 print(obj.id)
 
@@ -160,27 +180,24 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         print("** no instance found **")
 
-    def do_all(self, args):
+    def do_all(self, className):
         """ method that prints all the objects """
-        all_objs = storage.all()
-        if args:
-            s = ""
-            for i in args:
-                s += i
-            data = s.split()
-            if data[0] not in classes:
-                print("** class doesn't exist **")
-                return
-            a = []
-            for i, j in all_objs.items():
-                if data[0] in i:
-                    a.append(j)
-            a = [str(i) for i in a]
-            print(a)
+        jsonDict = storage.all()
+        allObj = []
+        if className == "":
+            """ print every stored instance """
+            for instance in jsonDict:
+                allObj.append(str(jsonDict[instance]))
+                print(allObj)
         else:
-            all_objs = [str(j) for j in all_objs.values()]
-            print(all_objs)
-
+            """ print every stored instance of a specific class"""
+            if className not in jsonDict:
+                print("** class doesn't exist **")
+            for instance in jsonDict:
+                if className in instance:
+                    allObj.append(str(jsonDict[instance]))
+                    print(allObj)
+                            
     def do_update(self, args):
         """ method that updates an object """
         if not args:

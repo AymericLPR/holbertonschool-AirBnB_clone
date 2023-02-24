@@ -4,6 +4,7 @@ import datetime
 import uuid
 from models import storage
 
+
 class BaseModel:
     """Defines all common attributes/methods for other classes"""
 
@@ -13,7 +14,8 @@ class BaseModel:
             for k, v in kwargs.items():
                 if k != "__class__":
                     if k in ["created_at", "updated_at"]:
-                        v = datetime.datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+                        v = datetime.datetime.strptime(v,
+                                                       "%Y-%m-%dT%H:%M:%S.%f")
                     setattr(self, k, v)
         else:
             self.id = str(uuid.uuid4())
@@ -34,4 +36,5 @@ class BaseModel:
         return d
 
     def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, self.__dict__)

@@ -180,24 +180,27 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         print("** no instance found **")
 
-    def do_all(self, className):
+    def do_all(self, args):
         """ method that prints all the objects """
-        jsonDict = storage.all()
-        allObj = []
-        if className == "":
-            """ print every stored instance """
-            for instance in jsonDict:
-                allObj.append(str(jsonDict[instance]))
-                print(allObj)
-        else:
-            """ print every stored instance of a specific class"""
-            if className not in jsonDict:
+        all_objs = storage.all()
+        if args:
+            s = ""
+            for i in args:
+                s += i
+            data = s.split()
+            if data[0] not in classes:
                 print("** class doesn't exist **")
-            for instance in jsonDict:
-                if className in instance:
-                    allObj.append(str(jsonDict[instance]))
-                    print(allObj)
-                            
+                return
+            a = []
+            for i, j in all_objs.items():
+                if data[0] in i:
+                    a.append(j)
+            a = [str(i) for i in a]
+            print(a)
+        else:
+            all_objs = [str(j) for j in all_objs.values()]
+            print(all_objs)
+
     def do_update(self, args):
         """ method that updates an object """
         if not args:

@@ -34,4 +34,4 @@ class BaseModel:
         return d
 
     def __str__(self):
-        return "[{} ({}) {}]".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)

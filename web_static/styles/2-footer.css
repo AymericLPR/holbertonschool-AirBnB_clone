@@ -1,0 +1,14 @@
+Footer
+{
+        color:#00FF00;
+        height: 60px;
+        width: 100%;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+}
+
+footer p {
+    margin: 0;
+}
